@@ -77,6 +77,7 @@ public class GamePlayerDto {
         HitsDto hitsDto=new HitsDto();
 
         dto.put("created", gamePlayer.getGame().getCreation_date());
+        dto.put("id", gamePlayer.getGame().getId());
         dto.put("gamePlayers", gamePlayer.getGame().getGamePlayers()
                         .stream()
                         .map(gamePlayer1 -> {
