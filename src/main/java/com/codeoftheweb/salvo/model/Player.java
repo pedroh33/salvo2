@@ -24,7 +24,7 @@ public class Player {
     private Set<Score> scores;
 
     public Player() {}
-    public Player(String name, String email, String password) {
+    public Player(String email,String name, String password) {
         this.name = name;
         this.email = email;
         this.password=password;

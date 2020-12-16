@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
+import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -47,154 +48,110 @@ public class SalvoApplication {
 
 	@Bean
 	public CommandLineRunner initData(
-			PlayerRepository player_rep,
-			GameRepository game_rep,
-			GamePlayerRepository gp_rep,
-			ShipRepository ship_rep,
-			SalvoRepository salvo_rep,
+			PlayerRepository repository,
+			GameRepository Grepository,
+			GamePlayerRepository GPrepository,
+			ShipRepository SRepository,
+			SalvoRepository salvoRepository,
 			ScoreRepository scoreRepository
 	){
 		return (args) -> {
-			Player A = new Player("Angela", "angie@proyecto.acc",passwordEncoder().encode("123"));
-			Player B = new Player("Brian", "brian@proyecto.acc",passwordEncoder().encode("123"));
-			Player C = new Player("Carlos", "charles@proyecto.acc",passwordEncoder().encode("123"));
-			Player D = new Player("Daniela", "dani@proyecto.acc",passwordEncoder().encode("123"));
+			//Players
+			Player player1 = new Player("david@gmail.com","David", passwordEncoder().encode("12"));
+			Player player2 = new Player("rocket@gmail.com","Rocket", passwordEncoder().encode("12"));
+			Player player3 = new Player("alex14676@hotmail.com","Alex", passwordEncoder().encode("46445883"));
+			Player player4 = new Player("nacho@gmail.com","Nacho", passwordEncoder().encode("12"));
+			Player player5 = new Player("juan@gmail.com","Juan", passwordEncoder().encode("12"));
+			Player player6 = new Player("sergio@gmail.com","Sergio", passwordEncoder().encode("12"));
 
-			Date current = new Date();
-			Game G1 = new Game(current); current = Date.from(current.toInstant().plusSeconds(3600));
-			Game G2 = new Game(current); current = Date.from(current.toInstant().plusSeconds(3600));
-			Game G3 = new Game(current); current = Date.from(current.toInstant().plusSeconds(3600));
-			Game G4 = new Game(current); current = Date.from(current.toInstant().plusSeconds(3600));
-			Game G5 = new Game(current); current = Date.from(current.toInstant().plusSeconds(3600));
-			Game G6 = new Game(current); current = Date.from(current.toInstant().plusSeconds(3600));
-			Game G7 = new Game(current); current = Date.from(current.toInstant().plusSeconds(3600));
-			Game G8 = new Game(current); current = Date.from(current.toInstant().plusSeconds(3600));
+			repository.save(player1);
+			repository.save(player2);
+			repository.save(player3);
+			repository.save(player4);
+			repository.save(player5);
+			repository.save(player6);
 
-			GamePlayer GP1 = new GamePlayer(A, G1); GamePlayer GP2 = new GamePlayer(B, G1);
-			GamePlayer GP3 = new GamePlayer(A, G2); GamePlayer GP4 = new GamePlayer(B, G2);
-			GamePlayer GP5 = new GamePlayer(B, G3); GamePlayer GP6 = new GamePlayer(D, G3);
-			GamePlayer GP7 = new GamePlayer(B, G4); GamePlayer GP8 = new GamePlayer(A, G4);
-			GamePlayer GP9 = new GamePlayer(D, G5); GamePlayer GP10 = new GamePlayer(A, G5);
-			GamePlayer GP11 = new GamePlayer(C, G6); GamePlayer GP12 = new GamePlayer();
-			GamePlayer GP13 = new GamePlayer(D, G7); GamePlayer GP14 = new GamePlayer();
-			GamePlayer GP15 = new GamePlayer(C, G8); GamePlayer GP16 = new GamePlayer(D, G8);
+			//Games
+			Game game1 = new Game(Date.from(Instant.now()));
+			Game game2 = new Game(Date.from(Instant.now()));
+			Game game3 = new Game(Date.from(Instant.now()));
+			Grepository.save(game1);
+			Grepository.save(game2);
+			Grepository.save(game3);
+
+			//GamePlayers
+			GamePlayer gamePlayer1 = new GamePlayer(player1, game1);
+			GamePlayer gamePlayer2 = new GamePlayer(player2, game1);
+			GamePlayer gamePlayer3 = new GamePlayer(player3, game2);
+			GamePlayer gamePlayer4 = new GamePlayer(player4, game2);
+			GamePlayer gamePlayer5 = new GamePlayer(player5, game3);
+			GamePlayer gamePlayer6 = new GamePlayer(player6, game3);
+
+			GPrepository.save(gamePlayer1);
+			GPrepository.save(gamePlayer2);
+			GPrepository.save(gamePlayer3);
+			GPrepository.save(gamePlayer4);
+			GPrepository.save(gamePlayer5);
+			GPrepository.save(gamePlayer6);
+
+			//Ships
+			Ship ship1 = new Ship("carrier", List.of("A1", "A2", "A3","A4", "A5"), gamePlayer1);
+			Ship ship2 = new Ship("battleship", List.of("B1", "B2", "B3","B4"), gamePlayer1);
+			Ship ship3 = new Ship("submarine", List.of("C1", "C2", "C3"), gamePlayer1);
+			Ship ship4 = new Ship("destroyer", List.of("D1", "D2", "D3"), gamePlayer1);
+			Ship ship5 = new Ship("patrolboat", List.of("E1", "E2"), gamePlayer1);
+			Ship ship6 = new Ship("carrier", List.of("A1", "A2", "A3","A4", "A5"), gamePlayer2);
+			Ship ship7 = new Ship("battleship", List.of("B1", "B2", "B3","B4"),gamePlayer2);
+			Ship ship8 = new Ship("submarine", List.of("C1", "C2", "C3"), gamePlayer2);
+			Ship ship9 = new Ship("destroyer", List.of("D1", "D2", "D3"), gamePlayer2);
+			Ship ship10 = new Ship("patrolboat", List.of("E1", "E2"), gamePlayer2);
+
+			SRepository.save(ship1);
+			SRepository.save(ship2);
+			SRepository.save(ship3);
+			SRepository.save(ship4);
+			SRepository.save(ship5);
+			SRepository.save(ship6);
+			SRepository.save(ship7);
+			SRepository.save(ship8);
+			SRepository.save(ship9);
+			SRepository.save(ship10);
+
+			//Salvos
+			Salvo salvo1 = new Salvo(  gamePlayer1, 1, List.of("A1", "B1", "C1", "E1", "E2"));
+			Salvo salvo2 = new Salvo(   gamePlayer2, 1 ,List.of("A2", "B2", "C2"));
+			Salvo salvo3 = new Salvo(  gamePlayer1,2, List.of("A2", "B2", "C2"));
+			Salvo salvo4 = new Salvo(  gamePlayer2,2, List.of("A1", "B1", "C1"));
+			Salvo salvo5 = new Salvo(  gamePlayer1, 3,List.of("A3", "B3", "C3"));
+			Salvo salvo6 = new Salvo(  gamePlayer2,3, List.of("A4", "B4", "C4"));
+
+			salvoRepository.save(salvo1);
+			salvoRepository.save(salvo2);
+			salvoRepository.save(salvo3);
+			salvoRepository.save(salvo4);
+			salvoRepository.save(salvo5);
+			salvoRepository.save(salvo6);
 
 
 
-
-
-
-
+			//Scores
 			/*
-			Ship SA = new Ship("Acorazado", GP1, Arrays.asList("A1", "A2", "A3"));
-			Ship SB = new Ship("Mercante", GP1, Arrays.asList("A2", "D2"));
-			Ship SC = new Ship("Galeon", GP1, Arrays.asList("H3", "H4", "H5", "H6"));
-			Ship SD = new Ship("Acorazado", GP2, Arrays.asList("A6", "A7", "A8"));
-
-
-			/
-			Ship S1 = new Ship("carrier", Arrays.asList("H2", "H3", "H4", "H5", "H6"), GP1);
-			Ship S2 = new Ship("submarine", Arrays.asList("E1", "F1", "G1"),GP1);
-			Ship S3 = new Ship("patrolboat", Arrays.asList("B4", "B5"),GP1);
-			Ship S4 = new Ship("destroyer",Arrays.asList("B5", "C5", "D5"),GP2);
-			Ship S5 = new Ship("patrolboat",Arrays.asList("F1", "F2"),GP2);
-
-			Ship S6 = new Ship("destroyer",Arrays.asList("B5", "C5", "D5"),GP3);
-			Ship S7 = new Ship("patrolboat",Arrays.asList("C6", "C7"),GP3);
-			Ship S8 = new Ship("submarine",Arrays.asList("A2", "A3", "A4"),GP4);
-			Ship S9 = new Ship("patrolboat",Arrays.asList("G6", "H6"),GP4);
-
-			Ship S10 = new Ship("destroyer",Arrays.asList("B5", "C5", "D5"),GP5);
-			Ship S11 = new Ship("patrolboat",Arrays.asList("C6", "C7"),GP5);
-			Ship S12 = new Ship("submarine",Arrays.asList("A2", "A3", "A4"),GP6);
-			Ship S13 = new Ship("patrolboat",Arrays.asList("G6", "H6"),GP6);
-
-			Ship S14 = new Ship("destroyer",Arrays.asList("B5", "C5", "D5"),GP7);
-			Ship S15 = new Ship("patrolboat",Arrays.asList("C6", "C7"),GP7);
-			Ship S16 = new Ship("submarine",Arrays.asList("A2", "A3", "A4"),GP8);
-			Ship S17 = new Ship("patrolboat",Arrays.asList("G6", "H6"),GP8);
-
-			Ship S18 = new Ship("destroyer",Arrays.asList("B5", "C5", "D5"),GP9);
-			Ship S19 = new Ship("patrolboat", Arrays.asList("C6", "C7"),GP9);
-			Ship S20 = new Ship("submarine", Arrays.asList("A2", "A3", "A4"),GP10);
-			Ship S21 = new Ship("atrolboat",Arrays.asList("G6", "H6"),GP10);
-
-			Ship S22 = new Ship("destroyer",Arrays.asList("B5", "C5", "D5"),GP11);
-			Ship S23 = new Ship("patrolboat", Arrays.asList("C6", "C7"),GP11);
-
-			Ship S24 = new Ship("destroyer",Arrays.asList("B5", "C5", "D5"),GP15);
-			Ship S25 = new Ship("patrolboat",Arrays.asList("C6", "C7"),GP15);
-			Ship S26 = new Ship("submarine", Arrays.asList("A2", "A3", "A4"),GP16);
-			Ship S27 = new Ship("patrolboat",Arrays.asList("G6", "H6"),GP16);
-
-
-			Salvo T1 = new Salvo(GP1, 1, Arrays.asList("B5", "C5", "F1"));
-			Salvo T2 = new Salvo(GP1, 2, Arrays.asList("F2", "D5"));
-			Salvo T3 = new Salvo(GP2, 1, Arrays.asList("B4", "B5", "B6"));
-			Salvo T4 = new Salvo(GP2, 2, Arrays.asList("E1", "H3", "A2"));
-
-			Salvo T5 = new Salvo(GP3, 1, Arrays.asList("A2", "A4", "G6"));
-			Salvo T6 = new Salvo(GP3, 2, Arrays.asList("A3", "H6"));
-			Salvo T7 = new Salvo(GP4, 1, Arrays.asList("B5", "D5", "C7"));
-			Salvo T8 = new Salvo(GP4, 2, Arrays.asList("C5", "C6"));
-
-			Salvo T9 = new Salvo(GP5, 1, Arrays.asList("G6", "H6", "A4"));
-			Salvo T10 = new Salvo(GP5, 1, Arrays.asList("A2", "A3", "D8"));
-			Salvo T11 = new Salvo(GP6, 1, Arrays.asList("H1", "H2", "H3"));
-			Salvo T12 = new Salvo(GP6, 1, Arrays.asList("E1", "F2", "G3"));
-
-			Salvo T13 = new Salvo(GP7, 1, Arrays.asList("A3", "A4", "F7"));
-			Salvo T14 = new Salvo(GP7, 2, Arrays.asList("A2", "G6", "H6"));
-			Salvo T15 = new Salvo(GP8, 1, Arrays.asList("B5", "C6", "H1"));
-			Salvo T16 = new Salvo(GP8, 2, Arrays.asList("C5", "C7", "D5"));
-
-			Salvo T17 = new Salvo(GP9, 1, Arrays.asList("A1", "A2", "A3"));
-			Salvo T18 = new Salvo(GP9, 2, Arrays.asList("G6", "G7", "G8"));
-			Salvo T19 = new Salvo(GP10, 1, Arrays.asList("B5", "B6", "C7"));
-			Salvo T20 = new Salvo(GP10, 2, Arrays.asList("C6", "D6", "E6"));
-			Salvo T21 = new Salvo(GP10, 3, Arrays.asList("H1", "H8"));
-
-			GP1.addSalvo(T1);
-			GP3.addSalvo(T3);
-*/
-			player_rep.saveAll(Arrays.asList(A, B, C, D));
-			game_rep.saveAll(Arrays.asList(G1, G2, G3, G4, G5, G6, G7, G8));
-
-			gp_rep.saveAll(Arrays.asList(
-					GP1,  GP2,  GP3,  GP4,  GP5,  GP6,  GP7,  GP8,  GP9, GP10,
-					GP11, GP13, GP15, GP16));
-
-			Ship S1 = new Ship("carrier", Arrays.asList("H2", "H3", "H4", "H5", "H6"), GP1);
-			Ship S2 = new Ship("submarine", Arrays.asList("E1", "F1", "G1"),GP2);
-			Ship S3 = new Ship("patrolboat", Arrays.asList("B4", "B5"),GP1);
-			Ship S4 = new Ship("destroyer",Arrays.asList("B5", "C5", "D5"),GP2);
-			Ship S5 = new Ship("patrolboat",Arrays.asList("F1", "F2"),GP2);
-
-			ship_rep.saveAll(Arrays.asList(S1, S2, S3, S4, S5));
-
-			Score score1 = new Score(A,G1,1.0, LocalDateTime.now());
-
-
-
-
-
-
-
-
-			// player_rep.save(A); player_rep.save(B); player_rep.save(C);
-
-
-			ship_rep.saveAll(Arrays.asList(
-					S1,  S2,  S3,  S4,  S5));
-			/*salvo_rep.saveAll(Arrays.asList(
+			Score score1 = new Score(player1, game1, 1, LocalDateTime.now());
+			Score score2 = new Score(player2, game1, 0, LocalDateTime.now());
+			Score score3 = new Score(player1, game1, 0, LocalDateTime.now());
+			Score score4 = new Score(player2, game1, 1, LocalDateTime.now());
+			Score score5 = new Score(player1, game1, 0.5, LocalDateTime.now());
+			Score score6 = new Score(player2, game1, 0.5, LocalDateTime.now());
 
 			scoreRepository.save(score1);
-		*/
+			scoreRepository.save(score2);
+			scoreRepository.save(score3);
+			scoreRepository.save(score4);
+			scoreRepository.save(score5);
+			scoreRepository.save(score6);
+             */
 		};
-
 	}
-
-
 }
 @Configuration
 class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {

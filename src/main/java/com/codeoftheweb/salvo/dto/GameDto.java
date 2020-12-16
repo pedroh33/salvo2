@@ -35,14 +35,12 @@ import java.util.stream.Collectors;
                         GamePlayerDto gamePlayerDTO = new GamePlayerDto(gamePlayer);
                         return gamePlayerDTO.makeGamePlayerDTO();})
                     .collect(Collectors.toList()));
-            dto.put("scores", this.game.getGamePlayers()
+            dto.put("scores", game.getScores()
                     .stream()
-                    .flatMap(gamePlayer -> gamePlayer.getPlayer().getScores()
-                            .stream()
                             .map(score -> {
                                 ScoreDto scoreDTO = new ScoreDto();
                                 return scoreDTO.makeScoreDTO(score);
-                            }))
+                            })
                     .collect(Collectors.toList()));
             return dto;
         }

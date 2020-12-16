@@ -17,7 +17,7 @@ public class SalvoDTO {
     public Salvo getSalvo() { return salvo; }
     public void setSalvo(Salvo salvo) { this.salvo = salvo; }
 
-    public Map<String,Object> makeSalvoDTO(){
+    public static Map<String,Object> makeSalvoDTO(Salvo salvo){
         Map<String,Object> dto = new LinkedHashMap<>();
 
         GamePlayer gamePlayer = salvo.getGamePlayer();

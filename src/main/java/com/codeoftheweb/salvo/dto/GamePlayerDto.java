@@ -1,10 +1,13 @@
 package com.codeoftheweb.salvo.dto;
 
+import com.codeoftheweb.salvo.model.Game;
 import com.codeoftheweb.salvo.model.GamePlayer;
 import com.codeoftheweb.salvo.model.Salvo;
 import com.codeoftheweb.salvo.util.Util;
 
 import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GamePlayerDto {
@@ -27,7 +30,7 @@ public class GamePlayerDto {
 
         return dto;
     }
-
+/*
     public Map<String,  Object> makeGameViewDTO(){
         Map<String, Object> dto = new LinkedHashMap<>();
         Map<String, Object> hits = new LinkedHashMap<>();
@@ -67,6 +70,58 @@ public class GamePlayerDto {
         return  dto;
 
     }
+*/
+    public static Map<String, Object>makeGameViewDTO(GamePlayer gamePlayer){
+        Map<String, Object> dto = new LinkedHashMap<>();
+        Map<String, Object> hits = new LinkedHashMap<>();
+        HitsDto hitsDto=new HitsDto();
+
+        dto.put("created", gamePlayer.getGame().getCreation_date());
+        dto.put("gamePlayers", gamePlayer.getGame().getGamePlayers()
+                        .stream()
+                        .map(gamePlayer1 -> {
+                            GamePlayerDto gamePlayerDTO = new GamePlayerDto(gamePlayer1);
+                            return gamePlayerDTO.makeGamePlayerDTO();
+                                    }));
+        dto.put("ships", gamePlayer.getShips().stream()
+                .map(s -> ShipDto.makeShipDTO(s))
+                .collect(Collectors.toList()));
+        dto.put("salvoes", gamePlayer.getGame().getGamePlayers()
+                .stream()
+                .flatMap(gp -> gp.getSalvoes().stream())
+                .map(salvo ->{
+                    return SalvoDTO.makeSalvoDTO(salvo);
+                })
+            .collect(Collectors.toList()));
+
+    if(gamePlayer.getGame().getGamePlayers().size()==2){
+        hits.put("self", hitsDto.makeHitsDTO(gamePlayer));
+        hits.put("opponent",hitsDto.makeHitsDTO(Util.getOpponent(gamePlayer)));
+    }else{
+        hits.put("self",new ArrayList<>());
+        hits.put("opponent",new ArrayList<>());
+    }
+    dto.put("hits", hits);
+    dto.put("gameState", Util.getGameState(gamePlayer));
+    return dto;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public GamePlayer getGamePlayer() {
         return gamePlayer;

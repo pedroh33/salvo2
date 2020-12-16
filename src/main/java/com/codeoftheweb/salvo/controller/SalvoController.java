@@ -38,33 +38,35 @@ public class SalvoController {
             if(p1.getId()==gp.getPlayer().getId()){
                 GamePlayer opponent = Util.getOpponent(gp);
                 if(opponent.getSalvoes().size() >= gp.getSalvoes().size()){
+                    salvo.setTurn(gp.getSalvoes().size()+1);
+                    salvo.setGamePlayer(gp);
                     salvoRepository.save(salvo);
-                    return new ResponseEntity<>(Util.makeMap("OK", "ok"), HttpStatus.CREATED);
+                    return new ResponseEntity<>(Util.makeMap("OK", "You did it, you fired"), HttpStatus.CREATED);
                 }else{
                     return new ResponseEntity<>(Util.makeMap("error", "this not your turn"), HttpStatus.FORBIDDEN);
                 }
             }else {
-                return new ResponseEntity<>(Util.makeMap("error", "This no your seccion"), HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(Util.makeMap("error", "This no your section"), HttpStatus.UNAUTHORIZED);
             }
         }else{
-            return new ResponseEntity<>(Util.makeMap("error", "This no your seccion"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(Util.makeMap("error", "This no your section"), HttpStatus.UNAUTHORIZED);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

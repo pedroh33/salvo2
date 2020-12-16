@@ -16,10 +16,9 @@ import com.codeoftheweb.salvo.repository.GameRepository;
 import com.codeoftheweb.salvo.repository.PlayerRepository;
 
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -107,29 +106,51 @@ public class AppController {
     @RequestMapping(value="/game_view/{id}", method = RequestMethod.GET)
     public ResponseEntity<Map<String, Object>>getGameView(@PathVariable long id, Authentication authentication){
         Player player = playerRepository.findByEmail(authentication.getName());
-        GamePlayer gamePlayer=gamePlayerRepository.getOne(id);
+
 
         if(Util.isGuest(authentication)){
 
             return new ResponseEntity<>(Util.makeMap("error", "Not logged in"), HttpStatus.UNAUTHORIZED);
         }
-    if(player.getId() != gamePlayer.getPlayer().getId()){
-        return new ResponseEntity<>(Util.makeMap("error", "Raja de aca tramposo"), HttpStatus.UNAUTHORIZED);
+        Long playerLogged = playerRepository.findByEmail(authentication.getName()).getId();
+        Long playerCheck = gamePlayerRepository.getOne(id).getPlayer().getId();
 
+        if (playerLogged != playerCheck){
+            return new ResponseEntity<>(Util.makeMap("error", "This is not your game"), HttpStatus.FORBIDDEN);
+        }
+        //los GamePlayerDto antes eran GameView_DTO
+        GamePlayer gamePlayer = gamePlayerRepository.getOne(id);
+        if(Util.getGameState(gamePlayer) == "WON"){
+            if(gamePlayer.getGame().getScores().size()<2) {
+                Set<Score> scores = new HashSet<>();
+                Score score1 = new Score();
+                score1.setPlayer(gamePlayer.getPlayer());
+                score1.setGame(gamePlayer.getGame());
+                score1.setFinishDate(LocalDateTime.now());
+                score1.setScore(1D);
+                scoreRepository.save(score1);
+                Score score2 = new Score();
+                score2.setPlayer(Util.getOpponent(gamePlayer).getPlayer());
+                score2.setGame(gamePlayer.getGame());
+                score2.setFinishDate(LocalDateTime.now());
+                score2.setScore(0D);
+                scoreRepository.save(score2);
+                scores.add(score1);
+                scores.add(score2);
+
+                Util.getOpponent(gamePlayer).getGame().setScores(scores);
+            }
+        }
+        if(Util.getGameState(gamePlayer) == "TIE"){
+            if(gamePlayer.getGame().getScores().size()<2) {
+                Score score1 = new Score();
+                score1.setPlayer(gamePlayer.getPlayer());
+                score1.setGame(gamePlayer.getGame());
+                score1.setFinishDate(LocalDateTime.now());
+                score1.setScore(0.5D);
+                scoreRepository.save(score1);
+            }
+        }
+        return new ResponseEntity<>(GamePlayerDto.makeGameViewDTO(gamePlayer), HttpStatus.ACCEPTED);
     }
-    GamePlayerDto gpDto=new GamePlayerDto(gamePlayer);
-    return new ResponseEntity<>(gpDto.makeGameViewDTO(), HttpStatus.ACCEPTED);
-
-    }
-
-
-
-
-
-
 }
-
-
-
-
-

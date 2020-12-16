@@ -16,11 +16,11 @@ public class ShipDto {
     public ShipDto() {
     }
 
-    public Map<String, Object>makeShipDTO(){
+    public static Map<String, Object>makeShipDTO(Ship ship){
         Map<String, Object>dto = new HashMap<>();
-        dto.put("id",this.ship.getId());
-        dto.put("type",this.ship.getType());
-        dto.put("locations", this.ship.getLocation());
+        dto.put("id",ship.getId());
+        dto.put("type",ship.getType());
+        dto.put("locations",ship.getLocation());
 
         return dto;
 

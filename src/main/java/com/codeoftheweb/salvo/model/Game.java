@@ -25,6 +25,7 @@ public class Game {
     public Game() {
         this.creation_date = new Date();
         this.gameplayers = new HashSet<GamePlayer>();
+        scores= new LinkedHashSet<Score>();
     }
     public Game(Date date) {
         this.creation_date = date;
@@ -49,4 +50,13 @@ public class Game {
                 .map(sub -> sub.getPlayer())
                 .collect(toList());
     }
+
+    public Set<Score> getScores() {
+        return scores;
+    }
+
+    public void setScores(Set<Score> scores) {
+        this.scores = scores;
+    }
 }
+
